@@ -1,3 +1,25 @@
 spring:
   application:
     name: todoapp
+  data:
+    rest:
+      base-path: api
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ${CLIENT_ID_GITHUB}
+            clientSecret: ${CLIENT_SECRET_GITHUB}
+          google:
+            client-id: ${CLIENT_ID_GOOGLE}
+            client-secret: ${CLIENT_SECRET_GOOGLE}
+server:
+  forward-headers-strategy: NATIVE
