@@ -6,7 +6,7 @@ spring:
       base-path: api
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
