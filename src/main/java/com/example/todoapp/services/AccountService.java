@@ -22,8 +22,8 @@ import org.springframework.util.StringUtils;
 import com.example.todoapp.domain.Account;
 import com.example.todoapp.dto.AccountDto;
 import com.example.todoapp.repositories.AccountRepository;
-import com.example.todoapp.security.OidcUserAccount;
-import com.example.todoapp.security.UserAccount;
+import com.example.todoapp.security.adapters.OidcUserAccount;
+import com.example.todoapp.security.adapters.UserAccount;
 
 import lombok.RequiredArgsConstructor;
 

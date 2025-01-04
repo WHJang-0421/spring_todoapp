@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.todoapp.domain.Account;
-import com.example.todoapp.security.OidcUserAccount;
-import com.example.todoapp.security.UserAccount;
+import com.example.todoapp.security.adapters.OidcUserAccount;
+import com.example.todoapp.security.adapters.UserAccount;
 import com.example.todoapp.services.AccountService;
 import com.example.todoapp.dto.AccountDto;
 

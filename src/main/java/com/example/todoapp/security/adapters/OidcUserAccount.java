@@ -1,4 +1,4 @@
-package com.example.todoapp.security;
+package com.example.todoapp.security.adapters;
 
 import java.util.Collection;
 

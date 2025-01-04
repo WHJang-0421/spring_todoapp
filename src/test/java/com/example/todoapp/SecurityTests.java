@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.todoapp.domain.Account;
-import com.example.todoapp.security.OidcUserAccount;
+import com.example.todoapp.security.adapters.OidcUserAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
