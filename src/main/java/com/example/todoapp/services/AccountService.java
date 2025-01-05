@@ -25,6 +25,7 @@ import com.example.todoapp.repositories.AccountRepository;
 import com.example.todoapp.security.adapters.OidcUserAccount;
 import com.example.todoapp.security.adapters.UserAccount;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,6 +36,7 @@ public class AccountService implements UserDetailsService, OAuth2UserService<Oid
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findByUsername(username);
         if (account == null) {
@@ -74,6 +76,16 @@ public class AccountService implements UserDetailsService, OAuth2UserService<Oid
                     oidcUser.getUserInfo(), account);
         }
         return oidcUserAccount;
+    }
+
+    public static Account getAccountFromPrincipal(UserAccount userAccount, OidcUserAccount oidcUserAccount) {
+        Account account;
+        if (userAccount == null) {
+            account = oidcUserAccount.getAccount();
+        } else {
+            account = userAccount.getAccount();
+        }
+        return account;
     }
 
     public boolean registerWithUsername(AccountDto accountDto) {
