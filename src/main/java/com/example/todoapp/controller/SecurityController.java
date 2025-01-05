@@ -23,11 +23,6 @@ public class SecurityController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/hi")
-    public String returnHi() {
-        return "hi";
-    }
-
     @GetMapping("/user")
     public Map<String, Object> user(@AuthenticationPrincipal UserAccount userAccount,
             @AuthenticationPrincipal OidcUserAccount oidcUserAccount) {
