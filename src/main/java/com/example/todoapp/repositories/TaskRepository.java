@@ -12,7 +12,8 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByOwner(Account owner);
 
-    @PostAuthorize("returnObject?.owner.id == authentication.account.id")
+    // Okay this is kind of lousy
+    @PostAuthorize("!returnObject.isPresent() || returnObject.get().owner.id == authentication.getPrincipal().account.id")
     @NonNull
     Optional<Task> findById(@NonNull Long id);
 }
