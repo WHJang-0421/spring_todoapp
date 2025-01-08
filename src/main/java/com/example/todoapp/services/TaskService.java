@@ -41,13 +41,14 @@ public class TaskService {
                 .toList();
     }
 
-    public void saveTask(TaskDto taskDto, Account account) {
-        assert account != null: "Account exists";
-        taskRepository.save(Task.builder()
+    public TaskDto saveTask(TaskDto taskDto, Account account) {
+        Task task = taskRepository.save(Task.builder()
                 .name(taskDto.getName())
                 .due(taskDto.getDue())
                 .finished(taskDto.isFinished())
                 .owner(account)
                 .build());
+        taskDto.setId(task.getId());
+        return taskDto;
     }
 }

@@ -13,4 +13,8 @@ public class TaskDto {
     private LocalDate due;
     private boolean finished;
     private String ownerName;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

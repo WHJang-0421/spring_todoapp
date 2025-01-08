@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.todoapp.domain.Account;
+import com.example.todoapp.domain.Task;
 import com.example.todoapp.dto.TaskDto;
 import com.example.todoapp.security.adapters.OidcUserAccount;
 import com.example.todoapp.security.adapters.UserAccount;
@@ -42,10 +43,9 @@ public class TaskController {
     }
 
     @PostMapping("/task")
-    public String addTask(@AuthenticationPrincipal UserAccount userAccount,
+    public TaskDto addTask(@AuthenticationPrincipal UserAccount userAccount,
             @AuthenticationPrincipal OidcUserAccount oidcUserAccount, @RequestBody TaskDto taskDto) {
         Account account = AccountService.getAccountFromPrincipal(userAccount, oidcUserAccount);
-        taskService.saveTask(taskDto, account);
-        return "Task saved";
+        return taskService.saveTask(taskDto, account);
     }
 }
