@@ -46,14 +46,14 @@ class SecurityTests {
 		input.put("username", "testuser");
 		input.put("password", "abc");
 
-		mockMvc.perform(post("/register")
+		mockMvc.perform(post("/api/register")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(input)))
 				.andExpect(status().isOk())
 				.andDo(print());
 
-		mockMvc.perform(formLogin("/login").user("testuser").password("abc"))
+		mockMvc.perform(formLogin("/api/login").user("testuser").password("abc"))
 				.andExpect(authenticated());
 	}
 
@@ -76,7 +76,7 @@ class SecurityTests {
 						.role("USER")
 						.sub("test_user_sub")
 						.build());
-		mockMvc.perform(get("/user").with(oidcLogin()
+		mockMvc.perform(get("/api/user").with(oidcLogin()
 				.oidcUser(userAccount)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", Matchers.is("testuser2")));

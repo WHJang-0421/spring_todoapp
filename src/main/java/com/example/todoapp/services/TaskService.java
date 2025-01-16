@@ -51,4 +51,14 @@ public class TaskService {
         taskDto.setId(task.getId());
         return taskDto;
     }
+
+    public void updateTaskById(Long id, TaskDto taskDto) {
+        Task task = taskRepository.getReferenceById(id);
+        task.updateTask(taskDto.getName(), taskDto.isFinished(), taskDto.getDue());
+        taskRepository.save(task);
+    }
+
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
+    }
 }

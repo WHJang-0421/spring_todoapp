@@ -2,8 +2,10 @@ package com.example.todoapp;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -69,20 +71,19 @@ public class TaskTests {
         public void createAndViewTask() throws Exception {
                 OidcUserAccount userAccount = createAccount("testuser2", "test_user_sub", "token-value");
 
-                Map<String, String> input = Map.of(
-                                "name", "example task",
-                                "due", "2024-12-13",
-                                "finished", "false");
                 mockMvc.perform(
-                                post("/task")
+                                post("/api/task")
                                                 .with(oidcLogin()
                                                                 .oidcUser(userAccount))
                                                 .with(csrf())
                                                 .contentType(MediaType.APPLICATION_JSON)
-                                                .content(objectMapper.writeValueAsString(input)))
+                                                .content(objectMapper.writeValueAsString(Map.of(
+                                                                "name", "example task",
+                                                                "due", "2024-12-13",
+                                                                "finished", "false"))))
                                 .andExpect(status().isOk());
                 MvcResult result = mockMvc.perform(
-                                get("/task")
+                                get("/api/task")
                                                 .with(oidcLogin()
                                                                 .oidcUser(userAccount)))
                                 .andExpect(status().isOk())
@@ -91,12 +92,27 @@ public class TaskTests {
                                 .andReturn();
                 long id = ((Number) JsonPath.read(result.getResponse().getContentAsString(), "$[0].id")).longValue();
                 mockMvc.perform(
-                                get("/task/" + id)
+                                get("/api/task/" + id)
                                                 .with(oidcLogin()
                                                                 .oidcUser(userAccount)))
                                 .andExpect(status().isOk())
                                 .andDo(print())
                                 .andExpect(jsonPath("$.ownerName").value("testuser2"));
+                mockMvc.perform(put("/api/task/" + id)
+                                .with(oidcLogin()
+                                                .oidcUser(userAccount))
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Map.of(
+                                                "name", "modified task",
+                                                "due", "2024-12-13",
+                                                "finished", "false"))))
+                                .andExpect(status().isOk());
+                mockMvc.perform(delete("/api/task/" + id)
+                                .with(oidcLogin()
+                                                .oidcUser(userAccount))
+                                .with(csrf()))
+                                .andExpect(status().isOk());
         }
 
         @Test
@@ -109,7 +125,7 @@ public class TaskTests {
                                 "due", "2024-12-13",
                                 "finished", "false");
                 MvcResult result = mockMvc.perform(
-                                post("/task")
+                                post("/api/task")
                                                 .with(oidcLogin()
                                                                 .oidcUser(userAccount))
                                                 .with(csrf())
@@ -118,10 +134,9 @@ public class TaskTests {
                                 .andExpect(status().isOk())
                                 .andReturn();
                 long id = ((Number) JsonPath.read(result.getResponse().getContentAsString(), "$.id")).longValue();
-                // TODO: rewrite test to use result from Post (and edit TaskController to return
-                // the taskdto added)
+
                 mockMvc.perform(
-                                get("/task/" + (id + 1))
+                                get("/api/task/" + (id + 1))
                                                 .with(oidcLogin()
                                                                 .oidcUser(userAccount)))
                                 .andExpect(status().isBadRequest());
@@ -136,7 +151,7 @@ public class TaskTests {
                                 "due", "2024-12-13",
                                 "finished", "false");
                 MvcResult result = mockMvc.perform(
-                                post("/task")
+                                post("/api/task")
                                                 .with(oidcLogin()
                                                                 .oidcUser(userAccount))
                                                 .with(csrf())
@@ -145,12 +160,26 @@ public class TaskTests {
                                 .andExpect(status().isOk())
                                 .andReturn();
                 long id = ((Number) JsonPath.read(result.getResponse().getContentAsString(), "$.id")).longValue();
-                // TODO: rewrite test to use result from Post
                 OidcUserAccount wrongAccount = createAccount("wrong_user", "wrong_user_sub", "token-value-2");
                 mockMvc.perform(
-                                get("/task/" + id)
+                                get("/api/task/" + id)
                                                 .with(oidcLogin()
                                                                 .oidcUser(wrongAccount)))
+                                .andExpect(status().isForbidden());
+                mockMvc.perform(put("/api/task/" + id)
+                                .with(oidcLogin()
+                                                .oidcUser(wrongAccount))
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Map.of(
+                                                "name", "modified task",
+                                                "due", "2024-12-13",
+                                                "finished", "false"))))
+                                .andExpect(status().isForbidden());
+                mockMvc.perform(delete("/api/task/" + id)
+                                .with(oidcLogin()
+                                                .oidcUser(wrongAccount))
+                                .with(csrf()))
                                 .andExpect(status().isForbidden());
         }
 }

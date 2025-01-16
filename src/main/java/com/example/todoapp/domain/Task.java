@@ -28,4 +28,10 @@ public class Task {
 
     @ManyToOne
     private Account owner;
+
+    public void updateTask(String name, boolean finished, LocalDate due) {
+        this.name = name;
+        this.due = due;
+        this.finished = finished;
+    }
 }
