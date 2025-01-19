@@ -3,7 +3,8 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc-secretsmanager:postgresql://springtodo-db.cnkagk22sv6c.ap-northeast-2.rds.amazonaws.com
-    username: prod/PostgresSecret
+    url: jdbc:postgresql://springtodo-db.cnkagk22sv6c.ap-northeast-2.rds.amazonaws.com:5432/postgres
+    username: ${todo-postgres.id}
+    password: ${todo-postgres.pw}
     hikari:
-      driver-class-name: com.amazonaws.secretsmanager.sql.AWSSecretsManagerPostgreSQLDriver
+      driver-class-name: org.postgresql.Driver
