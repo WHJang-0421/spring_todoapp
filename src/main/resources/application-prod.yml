@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: aws-secretsmanager:/secrets/postgres
   jpa:
     hibernate:
       ddl-auto: update
