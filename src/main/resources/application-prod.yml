@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc-secretsmanager:postgresql://springtodo-db.cnkagk22sv6c.ap-northeast-2.rds.amazonaws.com
+    username: prod/PostgresSecret
+    password: postgres
+    hikari:
+      driver-class-name: com.amazonaws.secretsmanager.sql.AWSSecretsManagerPostgreSQLDriver
